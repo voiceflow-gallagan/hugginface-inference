@@ -40,7 +40,7 @@ app.post('/', async (req, res) => {
   const base64data = Buffer.from(result).toString('base64')
 
   const img = `data:${mimeType};base64,${base64data}`
-
+  console.log(img)
   //res.json({ buffer: img })
   res.send({ base64data })
 })
