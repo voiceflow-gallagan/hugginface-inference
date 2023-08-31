@@ -7,7 +7,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 // Set up the endpoint for the POST request
-app.post('/', async (req, res) => {
+app.post('/text2image', async (req, res) => {
+  console.log('text2image')
   // Get the input and cache parameters from the request body
   //const { input, cache, model, token } = req.body
   const { token } = req.body
