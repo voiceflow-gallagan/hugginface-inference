@@ -1,0 +1,20 @@
+{
+  "name": "hugginface-inference",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "voiceflow",
+    "huggingface"
+  ],
+  "author": "NiKo | Voiceflow",
+  "license": "ISC",
+  "dependencies": {
+    "@huggingface/inference": "^2.6.1",
+    "axios": "^1.5.0",
+    "express": "^4.18.2"
+  }
+}
