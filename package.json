@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 restart ecosystem.config.cjs --exp-backoff-restart-delay=100 --log pm2log --env production",
+    "test": "pm2 restart ecosystem.config.cjs --log pm2log; pm2 logs hf-text2image",
+    "stop": "pm2 stop ecosystem.config.cjs"
   },
   "keywords": [
     "voiceflow",
