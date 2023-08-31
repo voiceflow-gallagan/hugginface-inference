@@ -11,16 +11,20 @@ app.post('/text2image', async (req, res) => {
   console.log('text2image')
   // Get the input and cache parameters from the request body
   //const { input, cache, model, token } = req.body
-  const { token } = req.body
-
+  const {
+    token,
+    model = 'prompthero/openjourney-v4',
+    prompt,
+    cache = true,
+  } = req.body
+  //a woman wearing a poncho oversized puffer jacket, inspired by OffWhite, tumblr, inspired by Yanjun Cheng style, digital art, lofi girl internet meme, trending on dezeen, catalog photo, 3 d render beeple, rhads and lois van baarle, cartoon style illustration, bright pastel colors, a beautiful artwork illustration, retro anime girl <lora:iu_V35:0.5> <lora:epiNoiseoffset_v2:0.5>
   const inputData = {
-    inputs:
-      'a woman wearing a poncho oversized puffer jacket, inspired by OffWhite, tumblr, inspired by Yanjun Cheng style, digital art, lofi girl internet meme, trending on dezeen, catalog photo, 3 d render beeple, rhads and lois van baarle, cartoon style illustration, bright pastel colors, a beautiful artwork illustration, retro anime girl <lora:iu_V35:0.5> <lora:epiNoiseoffset_v2:0.5>',
+    inputs: prompt,
     options: {
       wait_for_model: true,
+      use_cache: cache,
     },
   }
-  const model = 'prompthero/openjourney-v4'
 
   const response = await axios({
     url: `https://api-inference.huggingface.co/models/${model}`,
@@ -35,15 +39,11 @@ app.post('/text2image', async (req, res) => {
   })
 
   const mimeType = response.headers['content-type']
-
   const result = response.data
-
   const base64data = Buffer.from(result).toString('base64')
-
   const img = `data:${mimeType};base64,${base64data}`
-  console.log(img)
+
   res.json({ buffer: img })
-  //res.send({ img })
 })
 
 // Start the server
