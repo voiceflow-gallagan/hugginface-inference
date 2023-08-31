@@ -42,8 +42,8 @@ app.post('/text2image', async (req, res) => {
 
   const img = `data:${mimeType};base64,${base64data}`
   console.log(img)
-  //res.json({ buffer: img })
-  res.send({ base64data })
+  res.json({ buffer: img })
+  //res.send({ img })
 })
 
 // Start the server
