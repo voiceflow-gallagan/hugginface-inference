@@ -1,6 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 const app = express()
+const { HfInference } = require('@huggingface/inference')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -10,38 +11,24 @@ app.post('/text2image', async (req, res) => {
     token,
     model = 'prompthero/openjourney-v4',
     prompt,
-    cache = true,
+    parameters,
   } = req.body
 
-  if (!token || !prompt) {
-    return res.status(400).send('Missing required parameters: token or prompt')
+  if (!prompt) {
+    return res.status(400).send('Missing required parameters: prompt')
   }
 
-  const inputData = {
-    inputs: prompt,
-    options: {
-      wait_for_model: true,
-      use_cache: cache,
-    },
-  }
+  const inference = new HfInference(token)
 
   try {
-    const response = await axios({
-      url: `https://api-inference.huggingface.co/models/${model}`,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(inputData),
-      responseType: 'arraybuffer',
+    const blob = await inference.textToImage({
+      model: model,
+      inputs: prompt,
+      parameters: parameters,
     })
-
-    const mimeType = response.headers['content-type']
-    const result = response.data
-    const base64data = Buffer.from(result).toString('base64')
-    const img = `data:${mimeType};base64,${base64data}`
+    const buffer = await blob.arrayBuffer()
+    const base64data = Buffer.from(buffer).toString('base64')
+    const img = `data:${blob.type};base64,${base64data}`
 
     res.json({ buffer: img })
   } catch (error) {
@@ -51,7 +38,7 @@ app.post('/text2image', async (req, res) => {
 })
 
 // Start the server
-const port = 3909
+const port = 3800
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
 })
